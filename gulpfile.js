@@ -11,10 +11,9 @@ var gulp = require('gulp'),
    var httpProxy = require('http-proxy');
    var proxy = httpProxy.createProxyServer({});
 
-
 gulp.task('server', function() {
   connect.server({
-    root: ['app','bower_components','node_modules'],
+    root: ['app','/'],
     livereload: true,
     port:80,
     middleware:function(connect,opt){

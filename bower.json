@@ -4,7 +4,7 @@
   "dependencies": {
     "angular": "^1.4.3",
     "angular-ui-router": "angular-ui/ui-router#~0.2.15",
-    "bootstrap": "angular-ui/bootstrap#~0.13.4"
+    "angular-bootstrap": "~0.13.4"
   },
   "authors": [
     "cexoso <285516193@qq.com>"
