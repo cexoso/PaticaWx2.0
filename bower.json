@@ -1,0 +1,25 @@
+{
+  "name": "PaticaWx2.0",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "^1.4.3",
+    "angular-ui-router": "angular-ui/ui-router#~0.2.15",
+    "bootstrap": "angular-ui/bootstrap#~0.13.4"
+  },
+  "authors": [
+    "cexoso <285516193@qq.com>"
+  ],
+  "description": "this is patica webapp in wechat browser",
+  "main": "app.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
