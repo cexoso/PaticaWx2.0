@@ -10,7 +10,8 @@ bowerFiles = require('main-bower-files'),
 csso = require('gulp-csso'),
 rename = require('gulp-rename'),
 sass = require("gulp-sass"),
-path= require("path");
+path= require("path"),
+clean=require("gulp-clean");
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
 gulp.task('server',['injectDev'],function () {
@@ -42,25 +43,11 @@ gulp.task('server',['injectDev'],function () {
     'app/**/*.js',
     'app/**/*.css'
   ];
-  gulp.watch('app/**/*.scss', function (event) {          
-      console.log(event)
-      // if(event.type.match('delete')){
-      //   return; 
-      // }
-      // var st=new Date();
-      // gulp.src(event.path)
-      // .pipe(sass().on('error', sass.logError))
-      // .pipe(gulp.dest(path.dirname(event.path)));
-      // var et=new Date();
-      // console.log(et-st+'ms for compile sass');
-  });
+  gulp.run('scss:watch');
   gulp.watch(rel, function (event) {    
     console.log(event)
     if(event.type.match('add|delete')&&event.path.match('.js$|.css$')){
-      var st=new Date();
-      injectDev();
-      var et=new Date();
-      console.log(et-st+'ms for injectDev');
+      gulp.run('injectDev');      
     }
     gulp.src('./app/index.html').pipe(connect.reload());
   });
@@ -187,3 +174,22 @@ gulp.task('injectDist', function () {
   })).pipe(rename('index.html')).pipe(gulp.dest('dist/'));
 });
 
+gulp.task('scss:watch', function(){
+ gulp.watch('app/**/*.scss', function (event) {      
+      console.log(event);
+      console.log(event.type.match('deleted'));
+      if(event.type.match('deleted')){
+        var csspath=path.dirname(event.path)+'\\'+path.basename(event.path,'scss')+'css';
+        console.log(csspath)
+        gulp.src(csspath)
+        .pipe(clean());
+      }else{
+        var st=new Date();
+        gulp.src(event.path)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest(path.dirname(event.path)));
+        var et=new Date();
+        console.log(et-st+'ms for compile sass');  
+      }
+  });
+});
