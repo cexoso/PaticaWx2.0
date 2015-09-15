@@ -1,3 +1,4 @@
+'use strict'
 var gulp = require('gulp'),
 connect = require('gulp-connect'),
 jshint = require('gulp-jshint'),
@@ -7,10 +8,11 @@ es = require('event-stream'),
 inject = require('gulp-inject'),
 bowerFiles = require('main-bower-files'),
 csso = require('gulp-csso'),
-rename = require('gulp-rename');
+rename = require('gulp-rename'),
+sass = require("gulp-sass"),
+path= require("path");
 var httpProxy = require('http-proxy');
-var proxy = httpProxy.createProxyServer({
-});
+var proxy = httpProxy.createProxyServer({});
 gulp.task('server',['injectDev'],function () {
   connect.server({
     root: [
@@ -18,20 +20,21 @@ gulp.task('server',['injectDev'],function () {
       'bower_components'
     ],
     livereload: true,
-    port: 80,
-    middleware: function (connect, opt) {
-      return [function (req, res, next) {
-        if (!req.url.match('/api/')) {
-          next();
-        } else {
-          console.log('代理：' + req.url)
-          proxy.web(req, res, {
-            target: 'http://127.0.0.1:8080/PaticaService/'
-          });
-        }
-      }
-      ]
-    }
+    port: 80
+    // ,
+    // middleware: function (connect, opt) {
+    //   return [function (req, res, next) {
+    //     if (!req.url.match('/api/')) {
+    //       next();
+    //     } else {
+    //       console.log('代理：' + req.url)
+    //       proxy.web(req, res, {
+    //         target: 'http://127.0.0.1:8080/PaticaService/'
+    //       });
+    //     }
+    //   }
+    //   ]
+    // }//end of middleware
   });
   var rel = [
     'app/**/*.html',
@@ -39,10 +42,21 @@ gulp.task('server',['injectDev'],function () {
     'app/**/*.js',
     'app/**/*.css'
   ];
-  gulp.watch(rel, function (event) {
+  gulp.watch('app/**/*.scss', function (event) {          
+      console.log(event)
+      // if(event.type.match('delete')){
+      //   return; 
+      // }
+      // var st=new Date();
+      // gulp.src(event.path)
+      // .pipe(sass().on('error', sass.logError))
+      // .pipe(gulp.dest(path.dirname(event.path)));
+      // var et=new Date();
+      // console.log(et-st+'ms for compile sass');
+  });
+  gulp.watch(rel, function (event) {    
     console.log(event)
-    
-    if(event.path.match('.js$|.css$')){
+    if(event.type.match('add|delete')&&event.path.match('.js$|.css$')){
       var st=new Date();
       injectDev();
       var et=new Date();
@@ -172,3 +186,4 @@ gulp.task('injectDist', function () {
     name: 'bower'
   })).pipe(rename('index.html')).pipe(gulp.dest('dist/'));
 });
+
